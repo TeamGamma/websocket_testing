@@ -20,24 +20,13 @@ server.on('upgrade', function(request, socket, head) {
 
   ws.onmessage = function(event) {
     console.log('WebSocket received: "' + event.data + '"');
+    var msg = event.data;
 
-    switch(request.url) {
-      case '/chat':
-      return chatHandler(ws, event.data);
-
-      case '/time':
-      return timeHandler(ws, event.data);
-
-      default:
-      console.log('Unknown request for ' + request.url);
-    }
+    ws.send('You said "' + msg + '"');
   };
 
   ws.onclose = function(event) {
     console.log('WebSocket connection closed: ', event.code, event.reason);
-
-    // Cancel the timeout if it still exists
-    clearTimeout(ws.timeout);
   };
 });
 
