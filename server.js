@@ -2,9 +2,6 @@ var WebSocket = require('faye-websocket');
 var http = require('http');
 var fs = require('fs');
 
-var chatHandler = require('./chat').handleMessage;
-var timeHandler = require('./time').handleMessage;
-
 var server = http.createServer();
 
 // Handle special WebSocket request
