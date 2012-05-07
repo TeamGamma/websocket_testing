@@ -2,6 +2,9 @@ var WebSocket = require('faye-websocket');
 var http = require('http');
 var fs = require('fs');
 
+var chatHandler = require('./chat').handleMessage;
+var timeHandler = require('./time').handleMessage;
+
 var server = http.createServer();
 
 // Handle special WebSocket request
@@ -18,15 +21,16 @@ server.on('upgrade', function(request, socket, head) {
   ws.onmessage = function(event) {
     console.log('WebSocket received: "' + event.data + '"');
 
-    // echo back to client in uppercase
-    ws.send(event.data.toUpperCase());
+    switch(request.url) {
+      case '/chat':
+      return chatHandler(ws, event.data);
 
-    // start a 5s timer
-    ws.timeout = setTimeout(function() {
-      // send a message and close the connection
-      ws.send('I\'m disconnecting you, goodbye!');
-      ws.close();
-    }, 5000);
+      case '/time':
+      return timeHandler(ws, event.data);
+
+      default:
+      console.log('Unknown request for ' + request.url);
+    }
   };
 
   ws.onclose = function(event) {

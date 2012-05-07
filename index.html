@@ -7,7 +7,7 @@
 
     // Open the websocket connection
     function connect(url, onmessage) {
-        connection = new WebSocket('ws://' + location.host);
+        connection = new WebSocket(url);
 
         connection.onopen = function () {
             console.log('WebSocket connection open');
@@ -31,7 +31,7 @@
         var message = $('#message');
         var log = $('#chat-log');
 
-        connect('ws://' + location.host, function(e) {
+        connect('ws://' + location.host + '/chat', function(e) {
             console.log('Server: ' + e.data);
 
             log.append('<li class="server">Server: ' + e.data + '</li>');
