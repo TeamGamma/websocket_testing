@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title>WebSocket Testing</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    var connection;
+
+    // Open the websocket connection
+    function connect(url, onmessage) {
+        connection = new WebSocket('ws://' + location.host);
+
+        connection.onopen = function () {
+            console.log('WebSocket connection open');
+        };
+
+        // Log errors
+        connection.onerror = function (error) {
+            console.log('WebSocket error:' + error);
+        };
+
+        // Reconnect on close
+        connection.onclose = function () {
+            console.log('WebSocket connection closed, reopening in 1s...');
+            setTimeout(function() { connect(url, onmessage); }, 1000);
+        };
+
+        connection.onmessage = onmessage;
+    };
+
+    $(function() {
+        var message = $('#message');
+        var log = $('#chat-log');
+
+        connect('ws://' + location.host, function(e) {
+            console.log('Server: ' + e.data);
+
+            log.append('<li class="server">Server: ' + e.data + '</li>');
+        });
+
+        $('#chat-form').submit(function() {
+            // Clear text box
+            var txt = message.val();
+            message.val('');
+
+            log.append('<li class="client">Me: ' + txt + '</li>');
+            connection.send(txt);
+
+            return false;
+        });
+
+    });
+    </script>
+
+    <style type="text/css">
+    #chat-log {
+        list-style-type: none;
+    }
+    li.client {
+        color: red; 
+        font-weight: bold;
+    }
+    li.server {
+        color: green; 
+    }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Testing</h1>
+    <form id="chat-form">
+        <input type="text" name="message" id="message"/>
+        <input type="submit" id="submit" value="Send"/>
+    </form>
+
+    <ol id="chat-log">
+    </ol>
+</body>
+</html>
