@@ -1,0 +1,12 @@
+{
+	"name": "websocket_testing",
+	"description": "",
+	"version": "0.0.1",
+	"author": "",
+	"main": "server.js",
+        "node": "0.6.x",
+	"dependencies": {
+		"faye-websocket":"0.4.2"
+	},
+	"license": "MIT"
+}
